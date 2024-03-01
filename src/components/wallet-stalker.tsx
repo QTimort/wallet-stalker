@@ -18,7 +18,6 @@ import { Spinner } from "@/components/ui/spinner"
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -191,8 +190,7 @@ export function WalletStalker() {
           />
           <ModeToggle />
         </div>
-
-        <div className={"flex w-full flex-row gap-2"}>
+        <div className={"my-4 flex w-full flex-col gap-2 sm:flex-row"}>
           <Input
             id={"wallet-1"}
             type="text"
@@ -212,63 +210,65 @@ export function WalletStalker() {
             onChange={(e) => setFormDataField("walletTwo", e.target.value)}
           />
         </div>
-        <div className={"flex flex-col gap-y-2"}>
-          <Input
-            id={"from-date"}
-            type="datetime-local"
-            label={"From Date"}
-            placeholder="From Date"
-            className={"w-full"}
-            value={formData?.fromDate || ""}
-            onChange={(e) => {
-              setFormDataField("fromDate", e.target.value)
-              setFormDataField("fromBlock", undefined)
-            }}
-          />
-          <div className="flex items-center gap-x-2">
-            <div className="h-0.5 flex-grow bg-gray-400"></div>
-            <span>OR</span>
-            <div className="h-0.5 flex-grow bg-gray-400"></div>
+        <div className={"my-4 flex w-full flex-col gap-2 sm:flex-row"}>
+          <div className={"flex w-full flex-col gap-y-2 sm:w-1/2"}>
+            <Input
+              id={"from-date"}
+              type="datetime-local"
+              label={"From Date"}
+              placeholder="From Date"
+              className={"w-full"}
+              value={formData?.fromDate || ""}
+              onChange={(e) => {
+                setFormDataField("fromDate", e.target.value)
+                setFormDataField("fromBlock", undefined)
+              }}
+            />
+            <div className="flex items-center gap-x-2">
+              <div className="h-0.5 flex-grow bg-gray-400"></div>
+              <span>OR</span>
+              <div className="h-0.5 flex-grow bg-gray-400"></div>
+            </div>
+            <Input
+              id={"from-block"}
+              type="number"
+              min={1}
+              label={"From Block Slot"}
+              placeholder="From Block Slot"
+              className={"w-full"}
+              value={formData?.fromBlock || ""}
+              onChange={(e) => setFormDataField("fromBlock", e.target.value)}
+            />
           </div>
-          <Input
-            id={"from-block"}
-            type="number"
-            min={1}
-            label={"From Block Slot"}
-            placeholder="From Block Slot"
-            className={"w-full"}
-            value={formData?.fromBlock || ""}
-            onChange={(e) => setFormDataField("fromBlock", e.target.value)}
-          />
-        </div>
-        <div className={"flex flex-col gap-y-2"}>
-          <Input
-            id={"to-date"}
-            type="datetime-local"
-            label={"To Date"}
-            placeholder="To Date"
-            className={"w-full"}
-            value={formData?.toDate || ""}
-            onChange={(e) => {
-              setFormDataField("toDate", e.target.value)
-              setFormDataField("toBlock", undefined)
-            }}
-          />
-          <div className="flex items-center gap-x-2">
-            <div className="h-0.5 flex-grow bg-gray-400"></div>
-            <span>OR</span>
-            <div className="h-0.5 flex-grow bg-gray-400"></div>
+          <div className={"flex w-full flex-col gap-y-2 sm:w-1/2"}>
+            <Input
+              id={"to-date"}
+              type="datetime-local"
+              label={"To Date"}
+              placeholder="To Date"
+              className={"w-full"}
+              value={formData?.toDate || ""}
+              onChange={(e) => {
+                setFormDataField("toDate", e.target.value)
+                setFormDataField("toBlock", undefined)
+              }}
+            />
+            <div className="flex items-center gap-x-2">
+              <div className="h-0.5 flex-grow bg-gray-400"></div>
+              <span>OR</span>
+              <div className="h-0.5 flex-grow bg-gray-400"></div>
+            </div>
+            <Input
+              id={"to-block"}
+              type="number"
+              min={1}
+              label={"To Block Slot"}
+              placeholder="To Block Slot"
+              className={"w-full"}
+              value={formData?.toBlock || ""}
+              onChange={(e) => setFormDataField("toBlock", e.target.value)}
+            />
           </div>
-          <Input
-            id={"to-block"}
-            type="number"
-            min={1}
-            label={"To Block Slot"}
-            placeholder="To Block Slot"
-            className={"w-full"}
-            value={formData?.toBlock || ""}
-            onChange={(e) => setFormDataField("toBlock", e.target.value)}
-          />
         </div>
         <div className={"flex w-full flex-col items-center justify-center"}>
           {searchState.message && <div>{searchState.message}</div>}
@@ -294,9 +294,9 @@ export function WalletStalker() {
           <TableHeader>
             <TableRow className={"bg-zinc-100 dark:bg-zinc-900"}>
               <TableHead className="w-[100px]">Date</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Block</TableHead>
-              <TableHead>Memo</TableHead>
+              <TableHead className={"hidden sm:table-cell"}>Status</TableHead>
+              <TableHead className={"hidden sm:table-cell"}>Block</TableHead>
+              <TableHead className={"hidden sm:table-cell"}>Memo</TableHead>
               <TableHead className="text-right">Transaction Hash</TableHead>
             </TableRow>
           </TableHeader>
@@ -308,13 +308,13 @@ export function WalletStalker() {
                 </TableCell>
                 <TableCell
                   className={
-                    "w-24 text-left " +
+                    "hidden w-24 text-left sm:table-cell " +
                     (t.err ? "text-red-500" : "text-green-600")
                   }
                 >
                   {t.err ? "KO" : "OK"}
                 </TableCell>
-                <TableCell className={"w-24"}>
+                <TableCell className={"hidden w-24 sm:table-cell"}>
                   <Link
                     className={"text-left underline underline-offset-4"}
                     href={"https://solana.fm/block/" + t.slot}
@@ -324,7 +324,9 @@ export function WalletStalker() {
                     {t.slot}
                   </Link>
                 </TableCell>
-                <TableCell>{t.memo || ""}</TableCell>
+                <TableCell className={"hidden sm:table-cell "}>
+                  {t.memo || ""}
+                </TableCell>
                 <TableCell className="text-right">
                   <Link
                     className={"text-left underline underline-offset-4"}
